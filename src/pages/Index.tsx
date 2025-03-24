@@ -19,31 +19,31 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
   
-  // Mock data for alerts
+  // Mock data for alerts in India
   const mockAlerts = [
     {
       id: '1',
-      title: 'Flash Flood Warning',
-      description: 'Heavy rainfall causing flash flooding in low-lying areas. Move to higher ground immediately.',
+      title: 'Flood Warning',
+      description: 'Heavy rainfall causing flooding in low-lying areas of Kerala. Move to higher ground immediately.',
       level: 'high' as const,
       timestamp: '10 min ago',
-      location: 'San Francisco, CA'
+      location: 'Kochi, Kerala'
     },
     {
       id: '2',
-      title: 'Thunderstorm Watch',
-      description: 'Thunderstorms possible in your area. Stay indoors and away from windows.',
+      title: 'Cyclone Watch',
+      description: 'Cyclone approaching the eastern coast. Stay indoors and away from windows. Follow evacuation notices.',
       level: 'moderate' as const,
       timestamp: '25 min ago',
-      location: 'Oakland, CA'
+      location: 'Odisha Coast'
     },
     {
       id: '3',
-      title: 'Air Quality Alert',
-      description: 'Poor air quality conditions due to wildfire smoke. Limit outdoor activities.',
+      title: 'Landslide Alert',
+      description: 'Potential landslides in hilly regions due to continuous rainfall. Avoid travel on hill roads.',
       level: 'low' as const,
       timestamp: '1 hour ago',
-      location: 'Bay Area'
+      location: 'Uttarakhand'
     }
   ];
   
@@ -69,38 +69,38 @@ const Index = () => {
     }
   ];
   
-  // Mock data for emergency contacts
+  // Mock data for emergency contacts in India
   const mockEmergencyContacts = [
     {
       id: '1',
-      name: 'Emergency Services',
-      number: '911',
+      name: 'National Emergency',
+      number: '112',
       icon: <AlertTriangle size={20} />,
       priority: 'high' as const
     },
     {
       id: '2',
-      name: 'Flood Control District',
-      number: '(555) 123-4567',
+      name: 'Flood Control Room',
+      number: '011-23389469',
       icon: <Waves size={20} />,
       priority: 'normal' as const
     },
     {
       id: '3',
-      name: 'Medical Assistance',
-      number: '(555) 987-6543',
+      name: 'Ambulance',
+      number: '108',
       icon: <Ambulance size={20} />,
       priority: 'high' as const
     }
   ];
   
-  // Weather forecast data
+  // Weather forecast data for Kerala (flood-prone area)
   const weatherForecast = [
-    { day: 'Today', icon: <Cloud size={18} />, temp: '73°F', precip: '20%' },
-    { day: 'Tue', icon: <CloudRain size={18} />, temp: '68°F', precip: '80%' },
-    { day: 'Wed', icon: <CloudRain size={18} />, temp: '65°F', precip: '90%' },
-    { day: 'Thu', icon: <Wind size={18} />, temp: '70°F', precip: '40%' },
-    { day: 'Fri', icon: <Cloud size={18} />, temp: '75°F', precip: '10%' }
+    { day: 'Today', icon: <Cloud size={18} />, temp: '28°C', precip: '60%' },
+    { day: 'Tue', icon: <CloudRain size={18} />, temp: '26°C', precip: '80%' },
+    { day: 'Wed', icon: <CloudRain size={18} />, temp: '25°C', precip: '90%' },
+    { day: 'Thu', icon: <Wind size={18} />, temp: '27°C', precip: '40%' },
+    { day: 'Fri', icon: <Cloud size={18} />, temp: '29°C', precip: '20%' }
   ];
   
   // Loading skeletons
@@ -126,7 +126,7 @@ const Index = () => {
       <div className="p-6 lg:p-8 pb-20 lg:pb-12 animate-fade-in">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gradient">DisasterNav Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Real-time disaster monitoring and emergency assistance</p>
+          <p className="text-muted-foreground mt-1">Real-time disaster monitoring and emergency assistance for India</p>
         </div>
         
         {/* Weather forecast card */}

@@ -5,76 +5,76 @@ import EmergencyContacts from '../components/EmergencyContacts';
 import { Phone, Ambulance, AlertTriangle, Hospital, FireExtinguisher, ShieldAlert, Users, Wifi, Home } from 'lucide-react';
 
 const EmergencyPage = () => {
-  // Mock data for emergency services
+  // Emergency services for India
   const emergencyServices = [
     {
       id: '1',
-      name: 'Emergency Services',
-      number: '911',
+      name: 'National Emergency',
+      number: '112',
       icon: <AlertTriangle size={20} />,
       priority: 'high' as const
     },
     {
       id: '2',
-      name: 'Medical Assistance',
-      number: '(555) 987-6543',
+      name: 'Ambulance',
+      number: '108',
       icon: <Ambulance size={20} />,
       priority: 'high' as const
     },
     {
       id: '3',
       name: 'Fire Department',
-      number: '(555) 456-7890',
+      number: '101',
       icon: <FireExtinguisher size={20} />,
       priority: 'high' as const
     },
     {
       id: '4',
       name: 'Police Department',
-      number: '(555) 234-5678',
+      number: '100',
       icon: <ShieldAlert size={20} />,
       priority: 'high' as const
     },
   ];
   
-  // Mock data for disaster management agencies
+  // Disaster management agencies in India
   const disasterAgencies = [
     {
       id: '5',
-      name: 'FEMA Helpline',
-      number: '(800) 621-3362',
+      name: 'NDMA Helpline',
+      number: '1078',
       icon: <Home size={20} />,
       priority: 'normal' as const
     },
     {
       id: '6',
-      name: 'Flood Control District',
-      number: '(555) 123-4567',
+      name: 'Flood Control Room',
+      number: '011-23389469',
       icon: <Wifi size={20} />,
       priority: 'normal' as const
     },
     {
       id: '7',
-      name: 'Red Cross',
-      number: '(800) 733-2767',
+      name: 'Indian Red Cross',
+      number: '011-23359379',
       icon: <Users size={20} />,
       priority: 'normal' as const
     },
   ];
   
-  // Mock data for hospitals
+  // Hospitals in Kerala (flood-prone area)
   const hospitals = [
     {
       id: '8',
-      name: 'General Hospital',
-      number: '(555) 789-0123',
+      name: 'Medical College Kochi',
+      number: '0484-2411460',
       icon: <Hospital size={20} />,
       priority: 'normal' as const
     },
     {
       id: '9',
-      name: 'Medical Center',
-      number: '(555) 345-6789',
+      name: 'AIIMS Bhubaneswar',
+      number: '0674-2476789',
       icon: <Hospital size={20} />,
       priority: 'normal' as const
     },
@@ -88,7 +88,7 @@ const EmergencyPage = () => {
             <Phone size={22} className="text-primary" />
             <h1 className="text-2xl font-bold">Emergency Services</h1>
           </div>
-          <p className="text-muted-foreground mt-1">Quick access to emergency contacts and services</p>
+          <p className="text-muted-foreground mt-1">Quick access to emergency contacts and services in India</p>
         </div>
         
         <div className="glass-panel rounded-lg p-6 mb-6 border-alert-high/20">
@@ -101,11 +101,11 @@ const EmergencyPage = () => {
               <p className="text-muted-foreground mt-1">In life-threatening situations, immediately call:</p>
               <div className="mt-3">
                 <a 
-                  href="tel:911" 
+                  href="tel:112" 
                   className="inline-flex items-center gap-2 px-6 py-3 bg-alert-high text-white rounded-lg font-medium hover:bg-alert-high/90 transition-colors button-shine"
                 >
                   <Phone size={18} />
-                  <span className="text-lg">911</span>
+                  <span className="text-lg">112</span>
                 </a>
               </div>
             </div>
