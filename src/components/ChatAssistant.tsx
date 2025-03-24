@@ -55,7 +55,7 @@ const ChatAssistant: React.FC = () => {
       if (input.toLowerCase().includes('flood')) {
         responseContent = 'If you\'re experiencing flooding, please move to higher ground immediately. Avoid walking or driving through flood waters. Six inches of moving water can knock you down, and one foot of water can sweep your vehicle away.';
       } else if (input.toLowerCase().includes('earthquake')) {
-        responseContent = 'During an earthquake: Drop, Cover, and Hold On. Drop to the ground, take cover under a sturdy table or desk, and hold on until the shaking stops. If there's no table nearby, cover your face and head with your arms and crouch in an inside corner of the building.';
+        responseContent = 'During an earthquake: Drop, Cover, and Hold On. Drop to the ground, take cover under a sturdy table or desk, and hold on until the shaking stops. If there\'s no table nearby, cover your face and head with your arms and crouch in an inside corner of the building.';
       } else if (input.toLowerCase().includes('hurricane') || input.toLowerCase().includes('storm')) {
         responseContent = 'For hurricanes or severe storms, stay informed through local news. Secure your home, have emergency supplies ready, and follow evacuation orders if given. Stay away from windows during the storm.';
       } else if (input.toLowerCase().includes('fire')) {
