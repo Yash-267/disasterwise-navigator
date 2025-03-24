@@ -1,9 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import ChatAssistant from '../components/ChatAssistant';
 import { MessageSquare, Lightbulb, HelpCircle } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
+
+// Custom event interface for sending suggested questions to the chat
+interface CustomEvents {
+  'send-question': CustomEvent<{ question: string }>;
+}
+
+declare global {
+  interface WindowEventMap extends CustomEvents {}
+}
 
 const AssistantPage = () => {
   const { location } = useLocation();
@@ -110,6 +119,13 @@ const AssistantPage = () => {
   const faqItems = getFaqItems();
   const suggestedQuestions = getSuggestedQuestions();
   
+  // Handle clicking on a suggested question
+  const handleSuggestedQuestionClick = (question: string) => {
+    // Create and dispatch a custom event to send the question to the chat component
+    const event = new CustomEvent('send-question', { detail: { question } });
+    window.dispatchEvent(event);
+  };
+  
   return (
     <MainLayout>
       <div className="p-6 lg:p-8 animate-fade-in">
@@ -143,6 +159,7 @@ const AssistantPage = () => {
                 <button 
                   key={index} 
                   className="w-full text-left p-3 rounded-lg bg-secondary hover:bg-primary/10 transition-colors text-sm"
+                  onClick={() => handleSuggestedQuestionClick(question)}
                 >
                   {question}
                 </button>
