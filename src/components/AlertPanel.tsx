@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AlertTriangle, Info, ArrowRight } from 'lucide-react';
+import { useLocation } from '../contexts/LocationContext';
 
 type AlertLevel = 'low' | 'moderate' | 'high';
 
@@ -63,13 +64,35 @@ const AlertItem: React.FC<{ alert: Alert }> = ({ alert }) => {
 };
 
 const AlertPanel: React.FC<AlertPanelProps> = ({ alerts }) => {
-  const highPriorityAlerts = alerts.filter(alert => alert.level === 'high');
-  const otherAlerts = alerts.filter(alert => alert.level !== 'high');
+  const { location } = useLocation();
+  
+  const filteredAlerts = useMemo(() => {
+    if (!location) return alerts;
+    
+    // Filter alerts based on user location
+    return alerts.filter(alert => {
+      const alertLocation = alert.location.toLowerCase();
+      
+      // Check if the alert location contains the user's state or district
+      const matchesState = location.state && 
+        alertLocation.includes(location.state.toLowerCase());
+      
+      const matchesDistrict = location.district && 
+        alertLocation.includes(location.district.toLowerCase());
+      
+      return matchesState || matchesDistrict;
+    });
+  }, [alerts, location]);
+  
+  const highPriorityAlerts = filteredAlerts.filter(alert => alert.level === 'high');
+  const otherAlerts = filteredAlerts.filter(alert => alert.level !== 'high');
   
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Active Alerts</h2>
+        <h2 className="text-lg font-semibold">
+          {location ? `Alerts for ${location.district ? `${location.district}, ` : ''}${location.state}` : 'Active Alerts'}
+        </h2>
         <button className="text-sm text-primary hover:underline flex items-center gap-1">
           <span>View all</span>
           <ArrowRight size={14} />
@@ -104,10 +127,14 @@ const AlertPanel: React.FC<AlertPanelProps> = ({ alerts }) => {
         </div>
       )}
       
-      {alerts.length === 0 && (
+      {filteredAlerts.length === 0 && (
         <div className="py-8 text-center">
           <Info size={24} className="mx-auto mb-2 text-muted-foreground" />
-          <p className="text-muted-foreground">No active alerts in your area</p>
+          <p className="text-muted-foreground">
+            {location 
+              ? `No active alerts in ${location.district ? `${location.district}, ` : ''}${location.state}`
+              : 'No active alerts in your area'}
+          </p>
         </div>
       )}
     </div>

@@ -5,10 +5,13 @@ import Map from '../components/Map';
 import SafetyCard from '../components/SafetyCard';
 import ChatAssistant from '../components/ChatAssistant';
 import EmergencyContacts from '../components/EmergencyContacts';
+import LocationModal from '../components/LocationModal';
 import { Shield, Info, Cloud, CloudRain, Wind, Waves, FileWarning, AlertTriangle, Ambulance } from 'lucide-react';
+import { useLocation } from '../contexts/LocationContext';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const { location } = useLocation();
   
   useEffect(() => {
     // Simulate loading data
@@ -19,7 +22,7 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
   
-  // Mock data for alerts in India
+  // Mock data for alerts in India - these will be filtered by location
   const mockAlerts = [
     {
       id: '1',
@@ -44,6 +47,22 @@ const Index = () => {
       level: 'low' as const,
       timestamp: '1 hour ago',
       location: 'Uttarakhand'
+    },
+    {
+      id: '4',
+      title: 'Flash Flood Warning',
+      description: 'Sudden heavy rainfall causing flash floods in Wayanad district. Seek higher ground immediately.',
+      level: 'high' as const,
+      timestamp: '15 min ago',
+      location: 'Wayanad, Kerala'
+    },
+    {
+      id: '5',
+      title: 'Heat Wave Advisory',
+      description: 'Temperatures expected to exceed 45°C in Rajasthan. Stay hydrated and limit outdoor exposure.',
+      level: 'high' as const,
+      timestamp: '3 hours ago',
+      location: 'Rajasthan'
     }
   ];
   
@@ -123,10 +142,15 @@ const Index = () => {
   
   return (
     <MainLayout>
+      <LocationModal />
       <div className="p-6 lg:p-8 pb-20 lg:pb-12 animate-fade-in">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gradient">DisasterNav Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Real-time disaster monitoring and emergency assistance for India</p>
+          <p className="text-muted-foreground mt-1">
+            {location 
+              ? `Disaster monitoring for ${location.district ? `${location.district}, ` : ''}${location.state}`
+              : 'Real-time disaster monitoring and emergency assistance for India'}
+          </p>
         </div>
         
         {/* Weather forecast card */}

@@ -1,11 +1,18 @@
-import React from 'react';
+
+import React, { useState, useMemo } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import AlertPanel from '../components/AlertPanel';
-import { Bell, Filter, Search } from 'lucide-react';
+import LocationModal from '../components/LocationModal';
+import { Bell, Filter, Search, MapPin } from 'lucide-react';
+import { useLocation } from '../contexts/LocationContext';
+import { Button } from '@/components/ui/button';
 
 const AlertsPage = () => {
-  // Mock data for alerts in India
-  const mockAlerts = [
+  const { location, setIsLocationModalOpen } = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // More comprehensive mock data for alerts across India
+  const allAlerts = [
     {
       id: '1',
       title: 'Flood Warning',
@@ -45,11 +52,64 @@ const AlertsPage = () => {
       level: 'high' as const,
       timestamp: '3 hours ago',
       location: 'Rajasthan'
+    },
+    {
+      id: '6',
+      title: 'Flash Flood Warning',
+      description: 'Sudden heavy rainfall causing flash floods in Wayanad district. Seek higher ground immediately.',
+      level: 'high' as const,
+      timestamp: '15 min ago',
+      location: 'Wayanad, Kerala'
+    },
+    {
+      id: '7',
+      title: 'Coastal Flooding',
+      description: 'High tides combined with heavy rainfall causing coastal flooding. Evacuate low-lying coastal areas.',
+      level: 'moderate' as const,
+      timestamp: '45 min ago',
+      location: 'Alappuzha, Kerala'
+    },
+    {
+      id: '8',
+      title: 'Dam Release Warning',
+      description: 'Controlled water release from Tehri Dam. Communities along the river basin should be vigilant.',
+      level: 'moderate' as const,
+      timestamp: '1.5 hours ago',
+      location: 'Tehri, Uttarakhand'
+    },
+    {
+      id: '9',
+      title: 'Thunderstorm Warning',
+      description: 'Severe thunderstorms with lightning expected. Avoid open areas and stay away from tall objects.',
+      level: 'moderate' as const,
+      timestamp: '30 min ago',
+      location: 'Bihar'
+    },
+    {
+      id: '10',
+      title: 'Disease Outbreak Alert',
+      description: 'Increased cases of waterborne diseases reported in flood-affected areas. Boil water before consumption.',
+      level: 'high' as const,
+      timestamp: '4 hours ago',
+      location: 'Darbhanga, Bihar'
     }
   ];
+
+  // Filter alerts based on search query
+  const filteredAlerts = useMemo(() => {
+    if (!searchQuery) return allAlerts;
+    
+    const query = searchQuery.toLowerCase();
+    return allAlerts.filter(alert => 
+      alert.title.toLowerCase().includes(query) || 
+      alert.description.toLowerCase().includes(query) || 
+      alert.location.toLowerCase().includes(query)
+    );
+  }, [allAlerts, searchQuery]);
   
   return (
     <MainLayout>
+      <LocationModal />
       <div className="p-6 lg:p-8 animate-fade-in">
         <div className="mb-8">
           <div className="flex items-center gap-2">
@@ -67,17 +127,33 @@ const AlertsPage = () => {
                 type="text" 
                 placeholder="Search alerts..." 
                 className="w-full pl-9 pr-4 py-2 rounded-lg bg-secondary border border-border focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary hover:bg-primary/10 transition-colors">
-              <Filter size={16} />
-              <span className="text-sm">Filter</span>
-            </button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                className="flex items-center gap-2 px-4"
+                onClick={() => setIsLocationModalOpen(true)}
+              >
+                <MapPin size={16} />
+                <span className="text-sm">
+                  {location 
+                    ? `${location.district ? `${location.district}, ` : ''}${location.state}` 
+                    : 'Set Location'}
+                </span>
+              </Button>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Filter size={16} />
+                <span className="text-sm">Filter</span>
+              </Button>
+            </div>
           </div>
         </div>
         
         <div className="glass-panel rounded-lg p-6">
-          <AlertPanel alerts={mockAlerts} />
+          <AlertPanel alerts={filteredAlerts} />
         </div>
       </div>
     </MainLayout>
