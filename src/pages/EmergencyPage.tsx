@@ -2,7 +2,7 @@
 import React from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import EmergencyContacts from '../components/EmergencyContacts';
-import { Phone, Ambulance, AlertTriangle, Hospital, FireExtinguisher, Police, Users, Wifi, Home } from 'lucide-react';
+import { Phone, Ambulance, AlertTriangle, Hospital, FireExtinguisher, ShieldAlert, Users, Wifi, Home } from 'lucide-react';
 
 const EmergencyPage = () => {
   // Mock data for emergency services
@@ -32,7 +32,7 @@ const EmergencyPage = () => {
       id: '4',
       name: 'Police Department',
       number: '(555) 234-5678',
-      icon: <Police size={20} />,
+      icon: <ShieldAlert size={20} />,
       priority: 'high' as const
     },
   ];

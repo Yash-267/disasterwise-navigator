@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import AlertPanel from '../components/AlertPanel';
@@ -6,7 +5,7 @@ import Map from '../components/Map';
 import SafetyCard from '../components/SafetyCard';
 import ChatAssistant from '../components/ChatAssistant';
 import EmergencyContacts from '../components/EmergencyContacts';
-import { Shield, Info, Cloud, CloudRain, Wind, Waves, FileWarning } from 'lucide-react';
+import { Shield, Info, Cloud, CloudRain, Wind, Waves, FileWarning, AlertTriangle, Ambulance } from 'lucide-react';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);

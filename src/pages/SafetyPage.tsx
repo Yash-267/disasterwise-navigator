@@ -1,8 +1,7 @@
-
 import React from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import SafetyCard from '../components/SafetyCard';
-import { Shield, FileWarning, Info, Cloud, Droplets, Flame, Wind, Home, FirstAid, Package } from 'lucide-react';
+import { Shield, FileWarning, Info, Cloud, Droplets, Flame, Wind, Home, Heart, Package } from 'lucide-react';
 
 const SafetyPage = () => {
   // Mock data for general safety tips
@@ -81,13 +80,13 @@ const SafetyPage = () => {
       id: '10',
       title: 'Basic First Aid',
       description: 'Learn how to treat common injuries such as cuts, burns, and sprains.',
-      icon: <FirstAid size={20} className="text-primary" />
+      icon: <Heart size={20} className="text-primary" />
     },
     {
       id: '11',
       title: 'CPR Training',
       description: 'Consider getting certified in CPR and basic life support techniques.',
-      icon: <FirstAid size={20} className="text-primary" />
+      icon: <Heart size={20} className="text-primary" />
     }
   ];
   
@@ -159,7 +158,7 @@ const SafetyPage = () => {
           
           <div className="glass-panel rounded-lg p-6 md:col-span-2">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <FirstAid size={18} className="text-primary" />
+              <Heart size={18} className="text-primary" />
               First Aid & Medical
             </h2>
             <SafetyCard tips={firstAidTips} />
