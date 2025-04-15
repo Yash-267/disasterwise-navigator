@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, Loader2, User, Mic, MicOff, Volume } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
+import { useApiKeys } from './ApiKeyManager';
 
 interface Message {
   id: string;
@@ -23,6 +24,7 @@ const ChatAssistant: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<'en-IN' | 'hi-IN'>('en-IN');
   const { location } = useLocation();
+  const { apiKeys } = useApiKeys();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -109,9 +111,8 @@ const ChatAssistant: React.FC = () => {
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!input.trim()) return;
+    if (!input.trim() || !apiKeys.openai) return;
     
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content: input,
@@ -130,66 +131,56 @@ const ChatAssistant: React.FC = () => {
       setIsListening(false);
     }
     
-    // Simulate AI response (in a real app, this would be an API call to a LLM)
-    setTimeout(() => {
-      let responseContent = '';
-      const userLocation = location ? `${location.district ? location.district + ', ' : ''}${location.state}` : 'your area';
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKeys.openai}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a disaster response assistant. The user is located in ${location ? `${location.district ? location.district + ', ' : ''}${location.state}` : 'India'}. Provide clear, concise, and location-specific guidance for emergency situations.`
+            },
+            {
+              role: 'user',
+              content: sentMessage
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 500
+        })
+      });
+
+      const data = await response.json();
       
-      // Check for various disaster keywords
-      if (sentMessage.toLowerCase().includes('flood')) {
-        if (location?.state === 'Kerala' || location?.state === 'Assam' || location?.state === 'Bihar') {
-          responseContent = `FLOOD EMERGENCY IN ${userLocation.toUpperCase()}: Move to higher ground immediately. Avoid walking or driving through flood waters. Six inches of moving water can knock you down, and one foot of water can sweep your vehicle away. Contact local emergency services at 1078 for flood rescue.`;
-        } else {
-          responseContent = 'If you\'re experiencing flooding, please move to higher ground immediately. Avoid walking or driving through flood waters. Six inches of moving water can knock you down, and one foot of water can sweep your vehicle away. Contact NDRF at 1078 for flood-related emergencies.';
-        }
-      } else if (sentMessage.toLowerCase().includes('earthquake')) {
-        if (location?.state === 'Uttarakhand' || location?.state === 'Gujarat' || location?.state === 'Himachal Pradesh') {
-          responseContent = `EARTHQUAKE ALERT FOR ${userLocation.toUpperCase()}: Drop, Cover, and Hold On. Get under a sturdy table or desk and hold on until the shaking stops. Stay away from windows and exterior walls. After shaking stops, evacuate to open areas. Contact emergency services at 112.`;
-        } else {
-          responseContent = 'During an earthquake: Drop, Cover, and Hold On. Drop to the ground, take cover under a sturdy table or desk, and hold on until the shaking stops. If there\'s no table nearby, cover your face and head with your arms and crouch in an inside corner of the building. After the shaking stops, evacuate to an open area away from damaged buildings.';
-        }
-      } else if (sentMessage.toLowerCase().includes('hurricane') || sentMessage.toLowerCase().includes('cyclone') || sentMessage.toLowerCase().includes('storm')) {
-        if (location?.state === 'Odisha' || location?.state === 'West Bengal' || location?.state === 'Tamil Nadu') {
-          responseContent = `CYCLONE WARNING FOR ${userLocation.toUpperCase()}: Stay indoors in a secure building. Move away from windows. Prepare emergency supplies (water, food, medicines, torch, battery radio). Follow evacuation orders immediately if given. Contact state disaster management at 1070.`;
-        } else {
-          responseContent = 'For cyclones or severe storms, stay informed through local news and IMD alerts. Secure your home, have emergency supplies ready (drinking water, non-perishable food, medicines, flashlight), and follow evacuation orders if given. Stay away from windows during the storm and beware of flooding after the storm passes.';
-        }
-      } else if (sentMessage.toLowerCase().includes('fire')) {
-        responseContent = 'In case of fire: GET OUT, STAY OUT, and CALL FOR HELP. Never go back inside a burning building. If smoke is present, stay low to the ground and cover your mouth with a cloth. Test doors with the back of your hand before opening them. Call fire emergency services at 101 immediately once you are safe.';
-      } else if (sentMessage.toLowerCase().includes('landslide')) {
-        if (location?.state === 'Uttarakhand' || location?.state === 'Kerala' || location?.state === 'Himachal Pradesh') {
-          responseContent = `LANDSLIDE RISK IN ${userLocation.toUpperCase()}: Evacuate immediately if you notice cracks in the ground, tilting trees, or sudden increases in stream water levels. Move to higher, stable ground away from slopes. Contact district emergency operations center or call 1077.`;
-        } else {
-          responseContent = 'If you suspect an imminent landslide, evacuate immediately. Watch for warning signs like unusual sounds, cracks appearing in the ground, tilting trees, or bulging ground at the base of a slope. Move away from the path of the landslide or debris flow. Contact local disaster management at 1077.';
-        }
-      } else if (sentMessage.toLowerCase().includes('tsunami')) {
-        if (location?.state === 'Tamil Nadu' || location?.state === 'Kerala' || location?.state === 'Andhra Pradesh') {
-          responseContent = `TSUNAMI WARNING FOR ${userLocation.toUpperCase()}: If you feel strong earthquake near coast, move immediately to higher ground or inland. Don't wait for official warning. A tsunami may arrive within minutes. Stay away from the coast until officials declare it safe.`;
-        } else {
-          responseContent = 'If you feel a strong earthquake while near the coast, immediately move to higher ground or inland. Do not wait for an official tsunami warning as a tsunami can arrive within minutes of the earthquake. Stay away from coastal areas until officials declare it safe to return.';
-        }
-      } else if (sentMessage.toLowerCase().includes('evacuation') || sentMessage.toLowerCase().includes('evacuate')) {
-        responseContent = `For evacuation in ${userLocation}: Follow instructions from local authorities immediately. Bring only essential items (medicines, documents, water, food). Shut off utilities if instructed. Use designated evacuation routes. If you need assistance evacuating, contact district disaster management at 1077 or national emergency at 112.`;
-      } else if (sentMessage.toLowerCase().includes('hospital') || sentMessage.toLowerCase().includes('medical') || sentMessage.toLowerCase().includes('injured')) {
-        responseContent = `For medical emergencies in ${userLocation}, contact ambulance services at 108. For emergency medical advice, call 104. If you're treating injuries during a disaster: for bleeding, apply direct pressure; for burns, cool with clean water; for fractures, immobilize the area; for shock, lay person flat and elevate legs.`;
-      } else if (sentMessage.toLowerCase().includes('shelter') || sentMessage.toLowerCase().includes('relief camp')) {
-        responseContent = `For shelter information in ${userLocation} during disasters, contact your district emergency operations center or call 1077. Relief camps are typically set up in schools, community halls, and government buildings. You can also contact the local tahsildar office or village administrative officer for the nearest relief camps.`;
-      } else if (sentMessage.toLowerCase().includes('help') || sentMessage.toLowerCase().includes('emergency')) {
-        responseContent = `For immediate emergency assistance in ${userLocation}, call the National Emergency Number 112. For disaster-specific help, contact: NDRF: 1078, State Disaster Management: 1070, District Disaster Management: 1077, Fire: 101, Ambulance: 108, Police: 100.`;
-      } else {
-        responseContent = `I understand you're concerned about disaster safety in ${userLocation}. For specific emergency guidance, please mention the type of disaster (flood, earthquake, cyclone, fire, landslide, etc.) you're facing or preparing for. I can provide targeted safety instructions, evacuation procedures, and local emergency contact information based on your situation.`;
+      if (data.error) {
+        throw new Error(data.error.message);
       }
-      
+
       const botMessage: Message = {
         id: Date.now().toString(),
-        content: responseContent,
+        content: data.choices[0].message.content,
         sender: 'assistant',
         timestamp: new Date(),
       };
       
       setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        content: 'I apologize, but I encountered an error. Please check your API key or try again later.',
+        sender: 'assistant',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
   
   return (

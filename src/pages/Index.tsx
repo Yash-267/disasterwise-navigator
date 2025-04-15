@@ -8,6 +8,7 @@ import EmergencyContacts from '../components/EmergencyContacts';
 import LocationModal from '../components/LocationModal';
 import { Shield, Info, Cloud, CloudRain, Wind, Waves, FileWarning, AlertTriangle, Ambulance } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
+import ApiKeyManager from '../components/ApiKeyManager';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -142,6 +143,7 @@ const Index = () => {
   
   return (
     <MainLayout>
+      <ApiKeyManager />
       <LocationModal />
       <div className="p-6 lg:p-8 pb-20 lg:pb-12 animate-fade-in">
         <div className="mb-8">
