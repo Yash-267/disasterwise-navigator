@@ -1,12 +1,13 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useApiKeys } from './ApiKeyManager';
 import { Loader2 } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
 
+// Define types for Google Maps API
 declare global {
   interface Window {
-    google: any;
+    google: typeof google;
     initMap: () => void;
   }
 }
@@ -33,7 +34,9 @@ const Map = () => {
           if (!mapRef.current) return;
 
           const defaultCenter = { lat: 20.5937, lng: 78.9629 }; // Center of India
-          const center = location?.coordinates || defaultCenter;
+          const center = location?.coordinates ? 
+            { lat: location.coordinates.latitude, lng: location.coordinates.longitude } : 
+            defaultCenter;
 
           map.current = new window.google.maps.Map(mapRef.current, {
             zoom: location ? 8 : 5,
@@ -73,7 +76,10 @@ const Map = () => {
           // Add user's location marker if available
           if (location?.coordinates) {
             new window.google.maps.Marker({
-              position: location.coordinates,
+              position: { 
+                lat: location.coordinates.latitude, 
+                lng: location.coordinates.longitude 
+              },
               map: map.current,
               title: 'Your Location',
             });
