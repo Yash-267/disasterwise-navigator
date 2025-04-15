@@ -4,19 +4,25 @@ import { useApiKeys } from './ApiKeyManager';
 import { Loader2 } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
 
-// Import Google Maps types
-/// <reference types="@types/google.maps" />
-
+// Declare Google Maps namespace
 declare global {
   interface Window {
-    google: typeof google;
+    google: {
+      maps: {
+        Map: new (element: HTMLElement, options: any) => any;
+        Marker: new (options: any) => any;
+        SymbolPath: {
+          CIRCLE: number;
+        };
+      };
+    };
     initMap: () => void;
   }
 }
 
 const Map = () => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
+  const map = useRef<any>(null);
   const { apiKeys } = useApiKeys();
   const { location } = useLocation();
   const [isLoading, setIsLoading] = useState(true);
