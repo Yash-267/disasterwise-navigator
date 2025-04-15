@@ -4,7 +4,9 @@ import { useApiKeys } from './ApiKeyManager';
 import { Loader2 } from 'lucide-react';
 import { useLocation } from '../contexts/LocationContext';
 
-// Define types for Google Maps API
+// Import Google Maps types
+/// <reference types="@types/google.maps" />
+
 declare global {
   interface Window {
     google: typeof google;
